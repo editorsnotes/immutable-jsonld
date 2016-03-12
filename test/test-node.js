@@ -2,12 +2,11 @@
 
 import test from 'tape'
 import Immutable from 'immutable'
-import { JSONLDNode, JSONLDValue
-       , fromExpandedJSONLD, Cursor} from '../ImmutableJSONLD'
+import Cursor from 'immutable/contrib/cursor'
+import { JSONLDNode, JSONLDValue, fromExpandedJSONLD} from '../ImmutableJSONLD'
 
 import event from '../../test/data/event-expanded.json'
 import stupid from '../../test/data/stupid-expanded.json'
-//import stupid_children from '../../test/data/stupid-expanded-children.json'
 
 test('test JSONLDNode construction via factory method', t => {
   const node = JSONLDNode()
@@ -127,14 +126,17 @@ test('test JSONLDNode.getAt([predicate, predicate, predicate])', t => {
     'last round-trips OK')
 })
 
-// test('test cursor from JSONLDNode', t => {
-//   const node = fromExpandedJSONLD(
-//     { "http://g.cn/a": { "http://g.cn/b": { "http://g.cn/c": 1 } } }).first()
-//   let cursor = Cursor.from(node, ['a', 'b'], newData => {
-//     t.equal(newData.getIn(['a', 'b', 'c']), 2)
-//     t.end()
-//   })
-//   console.log(cursor.toJS())
-//   cursor = cursor.update('c', x => x + 1)
-//   console.log(cursor.toJS())
-// })
+test('test cursor from list of JSONLDNodes', t => {
+  const nodes = fromExpandedJSONLD(stupid)
+  let path = [ 0
+    , 'http://stupid.com/wheels', 1
+    , 'http://stupid.com/hubcap', 0
+    , 'http://stupid.com/color', 0
+  ]
+  let cursor = Cursor.from(nodes, path, newData => {
+      t.equal(newData.getIn(path.concat(['@value'])), 'pink')
+      t.end()
+    }
+  )
+  cursor.update('@value', () => 'pink')
+})
