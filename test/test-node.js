@@ -42,6 +42,34 @@ test('test JSONLDNode.toString()', t => {
     'works for non-empty node')
 })
 
+test('test JSONLDNode.getIn([])', t => {
+  const node = fromExpandedJSONLD(event).first()
+  let value = node.getIn([])
+  t.plan(2)
+  t.ok(value instanceof JSONLDNode, 'that is a JSONLDNode')
+  t.deepEqual(value.toJS(), event[0], 'round-trips OK')
+})
+
+test('test JSONLDNode.getIn([predicate])', t => {
+  const pred = 'http://www.w3.org/2002/12/cal/ical#dtstart'
+      , node = fromExpandedJSONLD(event).first()
+  let values = node.getIn([pred])
+  t.plan(4)
+  t.ok(values instanceof Immutable.List, 'returns an Immutable.List')
+  t.equal(values.size, 1, 'with one value')
+  t.ok(values.first() instanceof JSONLDValue, 'that is a JSONLDValue')
+  t.deepEqual(values.first().toJS(), event[0][pred][0], 'round-trips OK')
+})
+
+test('test JSONLDNode.getIn([predicate, 0])', t => {
+  const pred = 'http://www.w3.org/2002/12/cal/ical#dtstart'
+      , node = fromExpandedJSONLD(event).first()
+  let value = node.getIn([pred, 0])
+  t.plan(2)
+  t.ok(value instanceof JSONLDValue, 'that is a JSONLDValue')
+  t.deepEqual(value.toJS(), event[0][pred][0], 'round-trips OK')
+})
+
 test('test JSONLDNode.getAt([])', t => {
   const node = fromExpandedJSONLD(event).first()
   let values = node.getAt([])
