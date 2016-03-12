@@ -1,0 +1,112 @@
+'use strict'
+
+import test from 'tape'
+import Immutable from 'immutable'
+import { JSONLDNode, JSONLDValue
+       , fromExpandedJSONLD, Cursor} from '../ImmutableJSONLD'
+
+import event from '../../test/data/event-expanded.json'
+import stupid from '../../test/data/stupid-expanded.json'
+//import stupid_children from '../../test/data/stupid-expanded-children.json'
+
+test('test JSONLDNode construction via factory method', t => {
+  const node = JSONLDNode()
+  t.plan(9)
+  t.ok(node instanceof JSONLDNode,
+    'is a JSONLDNode')
+  t.ok(node instanceof Immutable.Map,
+    'is an Immutable.Map')
+  t.ok(node instanceof Immutable.Collection.Keyed,
+    'is an Immutable.Collection.Keyed')
+  t.ok(node instanceof Immutable.Collection,
+    'is an Immutable.Collection')
+  t.ok(node instanceof Immutable.Iterable,
+    'is an Immutable.Iterable')
+  t.ok(JSONLDNode.isJSONLDNode(node), 'isJSONLDNode()')
+  t.ok(Immutable.Map.isMap(node), 'isMap()')
+  t.ok(Immutable.Iterable.isIterable(node), 'isIterable()')
+  t.ok(Immutable.Iterable.isKeyed(node), 'isKeyed()')
+})
+
+test('test JSONLDNode.toString()', t => {
+  const empty = new JSONLDNode()
+      , node = fromExpandedJSONLD(
+          {"http://purl.org/dc/terms/title": [{"@value": "Moby Dick"}]}
+        ).first()
+  t.plan(2)
+  t.equals(empty.toString(), 'JSONLDNode {}',
+    'works for empty node')
+  t.equals(node.toString(),
+    'JSONLDNode { "http://purl.org/dc/terms/title": '
+    + 'Set { JSONLDValue { "@value": "Moby Dick" } } }',
+    'works for non-empty node')
+})
+
+test('test JSONLDNode.getAt([])', t => {
+  const node = fromExpandedJSONLD(event).first()
+  let values = node.getAt([])
+  t.plan(4)
+  t.ok(values instanceof Immutable.Set, 'returns an Immutable.Set')
+  t.equal(values.size, 1, 'with one value')
+  t.ok(values.first() instanceof JSONLDNode, 'that is a JSONLDNode')
+  t.deepEqual(values.first().toJS(), event[0], 'round-trips OK')
+})
+
+test('test JSONLDNode.getAt([predicate])', t => {
+  const pred = 'http://www.w3.org/2002/12/cal/ical#dtstart'
+      , node = fromExpandedJSONLD(event).first()
+  let values = node.getAt([pred])
+  t.plan(4)
+  t.ok(values instanceof Immutable.Set, 'returns an Immutable.Set')
+  t.equal(values.size, 1, 'with one value')
+  t.ok(values.first() instanceof JSONLDValue, 'that is a JSONLDValue')
+  t.deepEqual(values.first().toJS(), event[0][pred][0], 'round-trips OK')
+})
+
+test('test JSONLDNode.getAt([predicate, predicate])', t => {
+  const path = ['http://stupid.com/wheels', 'http://stupid.com/hubcap']
+      , node = fromExpandedJSONLD(stupid).first()
+  let values = node.getAt(path)
+  t.plan(6)
+  t.ok(values instanceof Immutable.Set, 'returns an Immutable.Set')
+  t.equal(values.size, 2, 'with two values')
+  t.ok(values.first() instanceof JSONLDNode, 'first is a JSONLDNode')
+  t.deepEqual(values.first().toJS(), stupid[0][path[0]][0][path[1]][0],
+    'first round-trips OK')
+  t.ok(values.last() instanceof JSONLDNode, 'last is a JSONLDNode')
+  t.deepEqual(values.last().toJS(), stupid[0][path[0]][1][path[1]][0],
+    'last round-trips OK')
+})
+
+test('test JSONLDNode.getAt([predicate, predicate, predicate])', t => {
+  const path =
+    [ 'http://stupid.com/wheels'
+    , 'http://stupid.com/hubcap'
+    , 'http://stupid.com/color'
+    ]
+      , node = fromExpandedJSONLD(stupid).first()
+  let values = node.getAt(path)
+  t.plan(6)
+  t.ok(values instanceof Immutable.Set, 'returns an Immutable.Set')
+  t.equal(values.size, 2, 'with two values')
+  t.ok(values.first() instanceof JSONLDValue, 'first is a JSONLDValue')
+  t.deepEqual(values.first().toJS(),
+    stupid[0][path[0]][0][path[1]][0][path[2]][0],
+    'first round-trips OK')
+  t.ok(values.last() instanceof JSONLDValue, 'last is a JSONLDValue')
+  t.deepEqual(values.last().toJS(),
+    stupid[0][path[0]][1][path[1]][0][path[2]][0],
+    'last round-trips OK')
+})
+
+// test('test cursor from JSONLDNode', t => {
+//   const node = fromExpandedJSONLD(
+//     { "http://g.cn/a": { "http://g.cn/b": { "http://g.cn/c": 1 } } }).first()
+//   let cursor = Cursor.from(node, ['a', 'b'], newData => {
+//     t.equal(newData.getIn(['a', 'b', 'c']), 2)
+//     t.end()
+//   })
+//   console.log(cursor.toJS())
+//   cursor = cursor.update('c', x => x + 1)
+//   console.log(cursor.toJS())
+// })

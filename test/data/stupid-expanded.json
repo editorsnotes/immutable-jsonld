@@ -1,0 +1,78 @@
+[
+  {
+    "@type": [
+      "http://stupid.com/Car"
+    ],
+    "http://stupid.com/wheels": [
+      {
+        "http://stupid.com/hubcap": [
+          {
+            "http://stupid.com/color": [
+              {
+                "@value": "black"
+              }
+            ]
+          }
+        ],
+        "http://stupid.com/location": [
+          {
+            "@value": "front right"
+          }
+        ]
+      },
+      {
+        "http://stupid.com/hubcap": [
+          {
+            "http://stupid.com/color": [
+              {
+                "@value": "unknown"
+              }
+            ],
+            "http://stupid.com/status": [
+              {
+                "@value": "missing"
+              }
+            ]
+          }
+        ],
+        "http://stupid.com/location": [
+          {
+            "@value": "front left"
+          }
+        ]
+      },
+      {
+        "http://stupid.com/hubcap": [
+          {
+            "http://stupid.com/color": [
+              {
+                "@value": "black"
+              }
+            ]
+          }
+        ],
+        "http://stupid.com/location": [
+          {
+            "@value": "rear right"
+          }
+        ]
+      },
+      {
+        "http://stupid.com/hubcap": [
+          {
+            "http://stupid.com/color": [
+              {
+                "@value": "black"
+              }
+            ]
+          }
+        ],
+        "http://stupid.com/location": [
+          {
+            "@value": "rear left"
+          }
+        ]
+      }
+    ]
+  }
+]

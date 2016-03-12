@@ -1,0 +1,38 @@
+[
+  {
+    "@type": [
+      "http://www.w3.org/ns/activitystreams#Create"
+    ],
+    "http://www.w3.org/ns/activitystreams#actor": [
+      {
+        "@id": "acct:sally@example.org",
+        "@type": [
+          "http://www.w3.org/ns/activitystreams#Person"
+        ],
+        "http://www.w3.org/ns/activitystreams#displayName": [
+          {
+            "@value": "Sally"
+          }
+        ]
+      }
+    ],
+    "http://www.w3.org/ns/activitystreams#object": [
+      {
+        "@type": [
+          "http://www.w3.org/ns/activitystreams#Note"
+        ],
+        "http://www.w3.org/ns/activitystreams#content": [
+          {
+            "@value": "This is a simple note"
+          }
+        ]
+      }
+    ],
+    "http://www.w3.org/ns/activitystreams#published": [
+      {
+        "@type": "http://www.w3.org/2001/XMLSchema#dateTime",
+        "@value": "2015-01-25T12:34:56Z"
+      }
+    ]
+  }
+]
