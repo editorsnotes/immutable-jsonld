@@ -38,7 +38,7 @@ test('test JSONLDNode.toString()', t => {
     'works for empty node')
   t.equals(node.toString(),
     'JSONLDNode { "http://purl.org/dc/terms/title": '
-    + 'Set { JSONLDValue { "@value": "Moby Dick" } } }',
+    + 'List [ JSONLDValue { "@value": "Moby Dick" } ] }',
     'works for non-empty node')
 })
 

@@ -6,15 +6,15 @@ import {JSONLDValue} from './JSONLDValue'
 
 export function JSONLDReviver(k, v) {
   let isIndexed = Immutable.Iterable.isIndexed(v)
-  return isIndexed ? v.toSet() :
+  return isIndexed ? v.toList() :
     v.has('@value') ? JSONLDValue(v) : JSONLDNode(v)
 }
 
 export function fromExpandedJSONLD(jsonld) {
   if (jsonld === null || jsonld === undefined) {
-    return Immutable.Set()
+    return Immutable.List()
   } else {
     let any = Immutable.fromJS(jsonld, JSONLDReviver)
-    return Immutable.Set.isSet(any) ? any : Immutable.Set.of(any)
+    return Immutable.List.isList(any) ? any : Immutable.List.of(any)
   }
 }

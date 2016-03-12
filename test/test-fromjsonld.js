@@ -16,7 +16,7 @@ import stupid from '../../test/data/stupid-expanded.json'
 test('test fromExpandedJSONLD()', t => {
   const nodes = fromExpandedJSONLD()
   t.plan(3)
-  t.ok(nodes instanceof Immutable.Set, 'is Immutable.Set')
+  t.ok(nodes instanceof Immutable.List, 'is Immutable.List')
   t.ok(nodes.isEmpty(), 'is empty')
   t.equal(nodes.size, 0, 'size is 0')
 })
@@ -24,7 +24,7 @@ test('test fromExpandedJSONLD()', t => {
 test('test fromExpandedJSONLD(null)', t => {
   const nodes = fromExpandedJSONLD(null)
   t.plan(3)
-  t.ok(nodes instanceof Immutable.Set, 'is Immutable.Set')
+  t.ok(nodes instanceof Immutable.List, 'is Immutable.List')
   t.ok(nodes.isEmpty(), 'is empty')
   t.equal(nodes.size, 0, 'size is 0')
 })
@@ -32,7 +32,7 @@ test('test fromExpandedJSONLD(null)', t => {
 test('test fromExpandedJSONLD([])', t => {
   const nodes = fromExpandedJSONLD([])
   t.plan(3)
-  t.ok(nodes instanceof Immutable.Set, 'is Immutable.Set')
+  t.ok(nodes instanceof Immutable.List, 'is Immutable.List')
   t.ok(nodes.isEmpty(), 'is empty')
   t.equal(nodes.size, 0, 'size is 0')
 })
@@ -40,7 +40,7 @@ test('test fromExpandedJSONLD([])', t => {
 test('test fromExpandedJSONLD({})', t => {
   const nodes = fromExpandedJSONLD({})
   t.plan(4)
-  t.ok(nodes instanceof Immutable.Set, 'is Immutable.Set')
+  t.ok(nodes instanceof Immutable.List, 'is Immutable.List')
   t.equal(nodes.size, 1, 'size is 1')
   t.ok(nodes.first() instanceof JSONLDNode, 'contains a JSONLDNode')
   t.ok(nodes.first().isEmpty(), 'contains an empty JSONLDNode')
@@ -49,7 +49,7 @@ test('test fromExpandedJSONLD({})', t => {
 test('test fromExpandedJSONLD(person)', t => {
   const nodes = fromExpandedJSONLD(person)
   t.plan(5)
-  t.ok(nodes instanceof Immutable.Set, 'is Immutable.Set')
+  t.ok(nodes instanceof Immutable.List, 'is Immutable.List')
   t.equal(nodes.size, 1, 'size is 1')
   t.deepEqual(nodes.toJS(), person, 'round-trips OK')
 
@@ -61,7 +61,7 @@ test('test fromExpandedJSONLD(person)', t => {
 test('test fromExpandedJSONLD(event)', t => {
   const nodes = fromExpandedJSONLD(event)
   t.plan(5)
-  t.ok(nodes instanceof Immutable.Set, 'is Immutable.Set')
+  t.ok(nodes instanceof Immutable.List, 'is Immutable.List')
   t.equal(nodes.size, 1, 'size is 1')
   t.deepEqual(nodes.toJS(), event, 'round-trips OK')
 
@@ -73,7 +73,7 @@ test('test fromExpandedJSONLD(event)', t => {
 test('test fromExpandedJSONLD(place)', t => {
   const nodes = fromExpandedJSONLD(place)
   t.plan(5)
-  t.ok(nodes instanceof Immutable.Set, 'is Immutable.Set')
+  t.ok(nodes instanceof Immutable.List, 'is Immutable.List')
   t.equal(nodes.size, 1, 'size is 1')
   t.deepEqual(nodes.toJS(), place, 'round-trips OK')
 
@@ -85,7 +85,7 @@ test('test fromExpandedJSONLD(place)', t => {
 test('test fromExpandedJSONLD(product)', t => {
   const nodes = fromExpandedJSONLD(product)
   t.plan(5)
-  t.ok(nodes instanceof Immutable.Set, 'is Immutable.Set')
+  t.ok(nodes instanceof Immutable.List, 'is Immutable.List')
   t.equal(nodes.size, 1, 'size is 1')
   t.deepEqual(nodes.toJS(), product, 'round-trips OK')
 
@@ -97,7 +97,7 @@ test('test fromExpandedJSONLD(product)', t => {
 test('test fromExpandedJSONLD(recipe)', t => {
   const nodes = fromExpandedJSONLD(recipe)
   t.plan(5)
-  t.ok(nodes instanceof Immutable.Set, 'is Immutable.Set')
+  t.ok(nodes instanceof Immutable.List, 'is Immutable.List')
   t.equal(nodes.size, 1, 'size is 1')
   t.deepEqual(nodes.toJS(), recipe, 'round-trips OK')
 
@@ -109,7 +109,7 @@ test('test fromExpandedJSONLD(recipe)', t => {
 test('test fromExpandedJSONLD(library)', t => {
   const nodes = fromExpandedJSONLD(library)
   t.plan(4)
-  t.ok(nodes instanceof Immutable.Set, 'is Immutable.Set')
+  t.ok(nodes instanceof Immutable.List, 'is Immutable.List')
   t.equal(nodes.size, 3, 'size is 3')
   t.deepEqual(nodes.toJS(), library, 'round-trips OK')
 
@@ -120,7 +120,7 @@ test('test fromExpandedJSONLD(library)', t => {
 test('test fromExpandedJSONLD(activity)', t => {
   const nodes = fromExpandedJSONLD(activity)
   t.plan(5)
-  t.ok(nodes instanceof Immutable.Set, 'is Immutable.Set')
+  t.ok(nodes instanceof Immutable.List, 'is Immutable.List')
   t.equal(nodes.size, 1, 'size is 1')
   t.deepEqual(nodes.toJS(), activity, 'round-trips OK')
 
@@ -132,7 +132,7 @@ test('test fromExpandedJSONLD(activity)', t => {
 test('test fromExpandedJSONLD(stupid)', t => {
   const nodes = fromExpandedJSONLD(stupid)
   t.plan(5)
-  t.ok(nodes instanceof Immutable.Set, 'is Immutable.Set')
+  t.ok(nodes instanceof Immutable.List, 'is Immutable.List')
   t.equal(nodes.size, 1, 'size is 1')
   t.deepEqual(nodes.toJS(), stupid, 'round-trips OK')
 

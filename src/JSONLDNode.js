@@ -42,7 +42,7 @@ JSONLDNode.prototype.get = function (k, notSetValue) {
 JSONLDNode.prototype.getAt = function (propertyPath, notSetValue) {
   var nested = Set.of(this)
   for (let prop of propertyPath) {
-    nested = nested.flatMap(node => node.get(prop, notSetValue))
+    nested = nested.flatMap(node => node.get(prop, notSetValue).toSet())
   }
   return nested
 }
