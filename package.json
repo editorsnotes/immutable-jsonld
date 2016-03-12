@@ -2,7 +2,7 @@
   "name": "immutable-jsonld",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "lib/ImmutableJSONLD.js",
   "scripts": {
     "lint": "eslint src",
     "transpile": "babel src -d lib --source-maps inline",
