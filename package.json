@@ -21,6 +21,7 @@
     "tape": "^4.5.1"
   },
   "dependencies": {
-    "immutable": "^3.7.6"
+    "immutable": "^3.7.6",
+    "jsonld": "^0.4.6"
   }
 }

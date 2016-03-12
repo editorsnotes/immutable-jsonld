@@ -2,7 +2,7 @@
 
 import test from 'tape'
 import Immutable from 'immutable'
-import {JSONLDNode, fromExpandedJSONLD} from '../ImmutableJSONLD'
+import {JSONLDNode, fromJSONLD, fromExpandedJSONLD} from '../ImmutableJSONLD'
 
 import person from '../../test/data/person-expanded.json'
 import event from '../../test/data/event-expanded.json'
@@ -11,7 +11,8 @@ import product from '../../test/data/product-expanded.json'
 import recipe from '../../test/data/recipe-expanded.json'
 import library from '../../test/data/library-expanded.json'
 import activity from '../../test/data/activity-expanded.json'
-import stupid from '../../test/data/stupid-expanded.json'
+import stupid from '../../test/data/stupid.json'
+import stupid_expanded from '../../test/data/stupid-expanded.json'
 
 test('test fromExpandedJSONLD()', t => {
   const nodes = fromExpandedJSONLD()
@@ -130,13 +131,45 @@ test('test fromExpandedJSONLD(activity)', t => {
 })
 
 test('test fromExpandedJSONLD(stupid)', t => {
-  const nodes = fromExpandedJSONLD(stupid)
+  const nodes = fromExpandedJSONLD(stupid_expanded)
   t.plan(5)
   t.ok(nodes instanceof Immutable.List, 'is Immutable.List')
   t.equal(nodes.size, 1, 'size is 1')
-  t.deepEqual(nodes.toJS(), stupid, 'round-trips OK')
+  t.deepEqual(nodes.toJS(), stupid_expanded, 'round-trips OK')
 
   let node = nodes.first()
   t.ok(node instanceof JSONLDNode, 'contains a JSONLDNode')
   t.equal(node.size, 2, 'with 2 entries')
+})
+
+test('test fromJSONLD(stupid)', t => {
+  fromJSONLD(stupid)
+    .then(
+      nodes => {
+        t.ok(nodes instanceof Immutable.List, 'is Immutable.List')
+        t.equal(nodes.size, 1, 'size is 1')
+        t.deepEqual(nodes.toJS(), stupid_expanded, 'round-trips OK')
+        let node = nodes.first()
+        t.ok(node instanceof JSONLDNode, 'contains a JSONLDNode')
+        t.equal(node.size, 2, 'with 2 entries')
+        t.end()
+      })
+    .catch(err => t.end(err))
+})
+
+test('test fromJSONLD(url)', t => {
+  fromJSONLD('https://gist.githubusercontent.com/rybesh/'
+    + '3cbacf6cbc539b7c22f7/raw/2c15ecbd3e878dd40523fa1ad8c70f004a1bb193/'
+    + 'stupid.json')
+    .then(
+      nodes => {
+        t.ok(nodes instanceof Immutable.List, 'is Immutable.List')
+        t.equal(nodes.size, 1, 'size is 1')
+        t.deepEqual(nodes.toJS(), stupid_expanded, 'round-trips OK')
+        let node = nodes.first()
+        t.ok(node instanceof JSONLDNode, 'contains a JSONLDNode')
+        t.equal(node.size, 2, 'with 2 entries')
+        t.end()
+      })
+    .catch(err => t.end(err))
 })

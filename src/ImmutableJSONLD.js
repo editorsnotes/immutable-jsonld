@@ -2,4 +2,4 @@
 
 export {JSONLDNode} from './JSONLDNode'
 export {JSONLDValue} from './JSONLDValue'
-export {fromExpandedJSONLD} from './fromJSONLD'
+export {fromJSONLD, fromExpandedJSONLD} from './fromJSONLD'

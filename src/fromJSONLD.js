@@ -1,6 +1,7 @@
 'use strict'
 
 import Immutable from 'immutable'
+import JSONLD from 'jsonld'
 import {JSONLDNode} from './JSONLDNode'
 import {JSONLDValue} from './JSONLDValue'
 
@@ -17,4 +18,12 @@ export function fromExpandedJSONLD(jsonld) {
     let any = Immutable.fromJS(jsonld, JSONLDReviver)
     return Immutable.List.isList(any) ? any : Immutable.List.of(any)
   }
+}
+
+export function fromJSONLD(jsonld) {
+  return new Promise((resolve, reject) => {
+    JSONLD.promises.expand(jsonld)
+      .then(expanded => resolve(fromExpandedJSONLD(expanded)))
+      .catch(reject)
+  })
 }
