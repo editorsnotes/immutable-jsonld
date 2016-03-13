@@ -103,6 +103,9 @@ function makeJSONLDNode(map, ownerID, hash) {
   node._map = map
   node.__ownerID = ownerID
   node.__hash = hash
+  Object.defineProperties(node,
+    { types: {get: () => map.get('@type', Set())}
+    })
   return node
 }
 

@@ -140,3 +140,19 @@ test('test cursor from list of JSONLDNodes', t => {
   )
   cursor.update('@value', () => 'pink')
 })
+
+test('test JSONLDNode.types', t => {
+  t.plan(6)
+  t.ok(JSONLDNode().types instanceof Immutable.Set, 'types is a set')
+  t.ok(JSONLDNode().types.equals(Immutable.Set()), 'no types')
+  t.ok(JSONLDNode(
+    {'@type': Immutable.Set()}).types.equals(Immutable.Set()),
+    'no types explicit')
+  t.ok(JSONLDNode(
+    {'@type': Immutable.Set.of('http://schema.org/Person')}).types.equals(
+    Immutable.Set.of('http://schema.org/Person')), 'one type')
+  try {JSONLDNode().types = null} catch (e) {
+    t.ok(e instanceof TypeError, 'set throws TypeError')
+    t.ok(/^Cannot set property types/.test(e.message), 'with message')
+  }
+})
