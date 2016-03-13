@@ -66,7 +66,7 @@ test('test JSONLDValue.language', t => {
   t.equals(val2.language, 'en')
   t.equals(val1.set('@language', 'ja').language, 'ja')
   t.equals(val2.set('@language', 'ja').language, 'ja')
-  try { val1.language = 'en'} catch (e) {
+  try {val1.language = 'en'} catch (e) {
     t.ok(e instanceof TypeError, 'set throws TypeError')
     t.ok(/^Cannot set property language/.test(e.message), 'with message')
   }
@@ -84,7 +84,7 @@ test('test JSONLDValue.type', t => {
     'http://schema.org/Text')
   t.equals(val2.set('@type', 'http://schema.org/Text').type,
     'http://schema.org/Text')
-  try { val1.type = 'http://schema.org/Text'} catch (e) {
+  try {val1.type = 'http://schema.org/Text'} catch (e) {
     t.ok(e instanceof TypeError, 'set throws TypeError')
     t.ok(/^Cannot set property type/.test(e.message), 'with message')
   }
@@ -95,7 +95,7 @@ test('test JSONLDValue.value', t => {
   t.plan(4)
   t.equals(val1.value, 'Moby Dick')
   t.equals(val1.set('@value', 'foo').value, 'foo')
-  try { val1.value = ''} catch (e) {
+  try {val1.value = ''} catch (e) {
     t.ok(e instanceof TypeError, 'set throws TypeError')
     t.ok(/^Cannot set property value/.test(e.message), 'with message')
   }
