@@ -98,6 +98,7 @@ function makeJSONLDValue(map, ownerID, hash) {
   Object.defineProperties(value,
     { language: {get: () => map.get('@language')}
     , type: {get: () => map.get('@type')}
+    , value: {get: () => map.get('@value')}
     })
   return value
 }

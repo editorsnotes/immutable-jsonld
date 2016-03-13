@@ -64,3 +64,14 @@ test('test JSONLDValue.type', t => {
     t.ok(/^Cannot set property type/.test(e.message), 'with message')
   }
 })
+
+test('test JSONLDValue.value', t => {
+  const val1 = JSONLDValue({'@value': 'Moby Dick'})
+  t.plan(4)
+  t.equals(val1.value, 'Moby Dick')
+  t.equals(val1.set('@value', 'foo').value, 'foo')
+  try { val1.value = ''} catch (e) {
+    t.ok(e instanceof TypeError, 'set throws TypeError')
+    t.ok(/^Cannot set property value/.test(e.message), 'with message')
+  }
+})
