@@ -23,11 +23,36 @@ test('test JSONLDValue construction via factory method', t => {
   t.ok(Immutable.Iterable.isKeyed(value), 'isKeyed()')
 })
 
+test('test JSONLDValue @value is always set', t => {
+  const empty = JSONLDValue()
+      , string = JSONLDValue('hello')
+      , number = JSONLDValue(69)
+      , truth = JSONLDValue(true)
+      , falsity = JSONLDValue(false)
+      , nullity = JSONLDValue(null)
+  t.plan(9)
+  t.equal(empty.get('@value'), '')
+  t.equal(string.get('@value'), 'hello')
+  t.equal(number.get('@value'), 69)
+  t.equal(truth.get('@value'), true)
+  t.equal(falsity.get('@value'), false)
+  t.equal(nullity, empty)
+  try {JSONLDValue({})} catch (e) {
+    t.ok(e, 'obj without @value throws exception')
+  }
+  try {JSONLDValue([])} catch (e) {
+    t.ok(e, 'array throws exception')
+  }
+  try {JSONLDValue(x => x)} catch (e) {
+    t.ok(e, 'function throws exception')
+  }
+})
+
 test('test JSONLDValue.toString()', t => {
   const empty = JSONLDValue()
       , value = JSONLDValue({"@value": "Moby Dick"})
   t.plan(2)
-  t.equals(empty.toString(), 'JSONLDValue {}',
+  t.equals(empty.toString(), 'JSONLDValue { "@value": "" }',
     'works for empty value')
   t.equals(value.toString(), 'JSONLDValue { "@value": "Moby Dick" }',
     'works for non-empty value')

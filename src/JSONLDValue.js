@@ -15,12 +15,25 @@ const assertNotInfinite = size => {
     'Cannot perform this action with an infinite size.'
   )
 }
+const ensureValueObject = value => {
+  switch (typeof value) {
+    case 'boolean':
+    case 'number':
+    case 'string':
+      return {'@value': value}
+    case 'object':
+      if ('@value' in value) return value
+      if (value.has('@value')) return value
+    default:
+      throw `No @value prop in ${value}`
+  }
+}
 
 export function JSONLDValue(value) {
   return value === null || value === undefined ? emptyJSONLDValue() :
     isJSONLDValue(value) ? value :
       emptyJSONLDValue().withMutations(map => {
-        var iter = Iterable.Keyed(value)
+        var iter = Iterable.Keyed(ensureValueObject(value))
         assertNotInfinite(iter.size)
         iter.forEach((v, k) => map.set(k, v))
       })
@@ -106,7 +119,7 @@ function makeJSONLDValue(map, ownerID, hash) {
 var EMPTY_JSONLD_VALUE
 function emptyJSONLDValue() {
   return (EMPTY_JSONLD_VALUE ||
-    (EMPTY_JSONLD_VALUE = makeJSONLDValue(Map())))
+    (EMPTY_JSONLD_VALUE = makeJSONLDValue(Map({'@value': ''}))))
 }
 
 function updateJSONLDValue(value, k, v) {
