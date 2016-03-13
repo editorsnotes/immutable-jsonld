@@ -95,6 +95,10 @@ function makeJSONLDValue(map, ownerID, hash) {
   value._map = map
   value.__ownerID = ownerID
   value.__hash = hash
+  Object.defineProperties(value,
+    { language: {get: () => map.get('@language')}
+    , type: {get: () => map.get('@type')}
+    })
   return value
 }
 

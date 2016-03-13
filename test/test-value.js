@@ -33,3 +33,34 @@ test('test JSONLDValue.toString()', t => {
     'works for non-empty value')
 })
 
+test('test JSONLDValue.language', t => {
+  const val1 = JSONLDValue({'@value': 'Moby Dick'})
+      , val2 = JSONLDValue({'@value': 'Moby Dick', '@language': 'en'})
+  t.plan(6)
+  t.equals(val1.language, undefined)
+  t.equals(val2.language, 'en')
+  t.equals(val1.set('@language', 'ja').language, 'ja')
+  t.equals(val2.set('@language', 'ja').language, 'ja')
+  try { val1.language = 'en'} catch (e) {
+    t.ok(e instanceof TypeError, 'set throws TypeError')
+    t.ok(/^Cannot set property language/.test(e.message), 'with message')
+  }
+})
+
+test('test JSONLDValue.type', t => {
+  const val1 = JSONLDValue({'@value': 'Moby Dick'})
+      , val2 = JSONLDValue(
+          { '@value': 'Moby Dick'
+          , '@type': 'http://www.w3.org/2001/XMLSchema#string'})
+  t.plan(6)
+  t.equals(val1.type, undefined)
+  t.equals(val2.type, 'http://www.w3.org/2001/XMLSchema#string')
+  t.equals(val1.set('@type', 'http://schema.org/Text').type,
+    'http://schema.org/Text')
+  t.equals(val2.set('@type', 'http://schema.org/Text').type,
+    'http://schema.org/Text')
+  try { val1.type = 'http://schema.org/Text'} catch (e) {
+    t.ok(e instanceof TypeError, 'set throws TypeError')
+    t.ok(/^Cannot set property type/.test(e.message), 'with message')
+  }
+})
