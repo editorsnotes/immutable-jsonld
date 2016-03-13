@@ -24,8 +24,8 @@ test('test JSONLDValue construction via factory method', t => {
 })
 
 test('test JSONLDValue.toString()', t => {
-  const empty = new JSONLDValue()
-      , value = new JSONLDValue({"@value": "Moby Dick"})
+  const empty = JSONLDValue()
+      , value = JSONLDValue({"@value": "Moby Dick"})
   t.plan(2)
   t.equals(empty.toString(), 'JSONLDValue {}',
     'works for empty value')
