@@ -6,6 +6,7 @@ import Cursor from 'immutable/contrib/cursor'
 import { JSONLDNode, JSONLDValue, fromExpandedJSONLD} from '../ImmutableJSONLD'
 
 import event from '../../test/data/event-expanded.json'
+import product from '../../test/data/product-expanded.json'
 import stupid from '../../test/data/stupid-expanded.json'
 
 test('test JSONLDNode construction via factory method', t => {
@@ -157,6 +158,17 @@ test('test JSONLDNode.types', t => {
   }
   t.ok(fromExpandedJSONLD(stupid).first().types.equals(
      Immutable.Set.of('http://stupid.com/Car')), 'this works too')
+})
+
+test('test JSONLDNode.id', t => {
+  t.plan(4)
+  t.equal(JSONLDNode().id, undefined, 'undefined by default')
+  try {JSONLDNode().id = 1} catch (e) {
+    t.ok(e instanceof TypeError, 'set throws TypeError')
+    t.ok(/^Cannot set property id/.test(e.message), 'with message')
+  }
+  t.equal(fromExpandedJSONLD(product).first().id,
+    'http://example.org/cars/for-sale#tesla')
 })
 
 test('test JSONLDNode.propertySeq()', t => {
