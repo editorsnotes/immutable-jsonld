@@ -92,7 +92,7 @@ test('test fromExpandedJSONLD(product)', t => {
 
   let node = nodes.first()
   t.ok(node instanceof JSONLDNode, 'contains a JSONLDNode')
-  t.equal(node.size, 4, 'with 4 entries')
+  t.equal(node.size, 8, 'with 8 entries')
 })
 
 test('test fromExpandedJSONLD(recipe)', t => {
