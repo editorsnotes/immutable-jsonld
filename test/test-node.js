@@ -156,3 +156,22 @@ test('test JSONLDNode.types', t => {
     t.ok(/^Cannot set property types/.test(e.message), 'with message')
   }
 })
+
+test('test JSONLDNode.propertySeq()', t => {
+  const allkeywords = JSONLDNode(
+    { '@context': {}
+    , '@id': null
+    , '@graph': []
+    , '@type': []
+    , '@reverse': null
+    , '@index': null
+      })
+  t.plan(2)
+  t.ok(allkeywords.propertySeq().equals(Immutable.Seq()),
+    'keywords are skipped')
+  t.ok(fromExpandedJSONLD(event).first().propertySeq().equals(Immutable.Seq.of(
+    'http://www.w3.org/2002/12/cal/ical#dtstart',
+    'http://www.w3.org/2002/12/cal/ical#location',
+    'http://www.w3.org/2002/12/cal/ical#summary'
+  )), 'others terms are not')
+})

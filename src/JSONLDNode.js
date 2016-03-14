@@ -3,6 +3,8 @@
 import {Map, Set, Iterable} from 'immutable'
 
 const IS_JSONLD_NODE_SENTINEL = '@@__IMMUTABLE_JSONLD_NODE__@@'
+    , KEYWORDS = Set.of(
+      '@context', '@id', '@graph', '@type', '@reverse', '@index')
     , DELETE = 'delete'
     , NOT_SET = {}
 
@@ -45,6 +47,10 @@ JSONLDNode.prototype.getAt = function (propertyPath, notSetValue) {
     nested = nested.flatMap(node => node.get(prop, notSetValue).toSet())
   }
   return nested
+}
+
+JSONLDNode.prototype.propertySeq = function () {
+  return this._map.keySeq().filterNot(key => KEYWORDS.includes(key))
 }
 
 JSONLDNode.prototype.clear = function () {
@@ -104,8 +110,7 @@ function makeJSONLDNode(map, ownerID, hash) {
   node.__ownerID = ownerID
   node.__hash = hash
   Object.defineProperties(node,
-    { types: {get: () => map.get('@type', Set())}
-    })
+    { types: {get: () => map.get('@type', Set()).toSet()} })
   return node
 }
 
