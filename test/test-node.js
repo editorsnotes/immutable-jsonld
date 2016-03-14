@@ -142,7 +142,7 @@ test('test cursor from list of JSONLDNodes', t => {
 })
 
 test('test JSONLDNode.types', t => {
-  t.plan(6)
+  t.plan(7)
   t.ok(JSONLDNode().types instanceof Immutable.Set, 'types is a set')
   t.ok(JSONLDNode().types.equals(Immutable.Set()), 'no types')
   t.ok(JSONLDNode(
@@ -155,6 +155,8 @@ test('test JSONLDNode.types', t => {
     t.ok(e instanceof TypeError, 'set throws TypeError')
     t.ok(/^Cannot set property types/.test(e.message), 'with message')
   }
+  t.ok(fromExpandedJSONLD(stupid).first().types.equals(
+     Immutable.Set.of('http://stupid.com/Car')), 'this works too')
 })
 
 test('test JSONLDNode.propertySeq()', t => {
