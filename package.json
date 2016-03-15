@@ -1,16 +1,17 @@
 {
   "name": "immutable-jsonld",
   "version": "1.0.0",
-  "description": "",
+  "description": "Immutable JSON-LD data structures and utility functions",
   "main": "lib/ImmutableJSONLD.js",
   "scripts": {
     "lint": "eslint src",
     "transpile": "babel src -d lib --source-maps inline",
     "build": "npm -s run lint && npm -s run transpile",
     "transpile-tests": "npm -s run build && babel test -d lib/test",
-    "test": "npm -s run transpile-tests && tape lib/test/*.js | tap-spec"
+    "test": "npm -s run transpile-tests && tape lib/test/*.js | tap-spec",
+    "prepublish": "babel src -d lib"
   },
-  "author": "",
+  "author": "Ryan Shaw <ryanshaw@unc.edu>",
   "license": "ISC",
   "devDependencies": {
     "babel-cli": "^6.6.5",
