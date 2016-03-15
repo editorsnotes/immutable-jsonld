@@ -1,6 +1,6 @@
 'use strict'
 
-import {Map, Set, Iterable} from 'immutable'
+import {Map, Set, List, Iterable} from 'immutable'
 
 const IS_JSONLD_NODE_SENTINEL = '@@__IMMUTABLE_JSONLD_NODE__@@'
     , KEYWORDS = Set.of(
@@ -50,7 +50,26 @@ JSONLDNode.prototype.getAt = function (propertyPath, notSetValue) {
 }
 
 JSONLDNode.prototype.propertySeq = function () {
-  return this._map.keySeq().filterNot(key => KEYWORDS.includes(key))
+  return this._map.entrySeq().filterNot(([k, ]) => KEYWORDS.includes(k))
+}
+
+JSONLDNode.prototype.childNodes = function () {
+  return this.propertySeq()
+    .reduce((childNodes, [predicate, list]) => {
+      let nodes = list.filter(child => isJSONLDNode(child))
+      return childNodes.concat(nodes.map(node => List.of(predicate, node)))
+    }, List())
+}
+
+function descendantNodesOf(node, propertyPath=List()) {
+  return List.of(List.of(propertyPath, node)).concat(
+    node.childNodes()
+      .flatMap(([predicate, child]) =>
+               descendantNodesOf(child, propertyPath.push(predicate))))
+}
+
+JSONLDNode.prototype.descendantNodes = function () {
+  return descendantNodesOf(this)
 }
 
 JSONLDNode.prototype.clear = function () {

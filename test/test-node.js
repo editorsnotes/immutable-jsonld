@@ -8,6 +8,8 @@ import { JSONLDNode, JSONLDValue, fromExpandedJSONLD} from '../ImmutableJSONLD'
 import event from '../../test/data/event-expanded.json'
 import product from '../../test/data/product-expanded.json'
 import stupid from '../../test/data/stupid-expanded.json'
+import stupid_children from '../../test/data/stupid-expanded-children.json'
+import stupid_descends from '../../test/data/stupid-expanded-descendants.json'
 
 test('test JSONLDNode construction via factory method', t => {
   const node = JSONLDNode()
@@ -183,9 +185,34 @@ test('test JSONLDNode.propertySeq()', t => {
   t.plan(2)
   t.ok(allkeywords.propertySeq().equals(Immutable.Seq()),
     'keywords are skipped')
-  t.ok(fromExpandedJSONLD(event).first().propertySeq().equals(Immutable.Seq.of(
-    'http://www.w3.org/2002/12/cal/ical#dtstart',
-    'http://www.w3.org/2002/12/cal/ical#location',
-    'http://www.w3.org/2002/12/cal/ical#summary'
-  )), 'others terms are not')
+  t.ok(fromExpandedJSONLD(event).first()
+    .propertySeq()
+    .map(([predicate, ]) => predicate)
+    .equals(Immutable.Seq.of(
+      'http://www.w3.org/2002/12/cal/ical#dtstart',
+      'http://www.w3.org/2002/12/cal/ical#location',
+      'http://www.w3.org/2002/12/cal/ical#summary'
+    )), 'others terms are not')
+})
+
+test('test JSONLDNode.childNodes()', t => {
+  const node = fromExpandedJSONLD(stupid).first()
+      , expected = Immutable.fromJS(stupid_children)
+  t.plan(2)
+  t.ok(node.childNodes().equals(expected), 'returns expected child nodes')
+  t.ok(fromExpandedJSONLD(
+    {'http://stupid.com/color': [{'@value': 'black'}]}).first()
+       .childNodes().equals(Immutable.List()), 'returns no child nodes')
+})
+
+test('test JSONLDNode.descendantNodes()', t => {
+  const node = fromExpandedJSONLD(stupid).first()
+      , expected = Immutable.fromJS(stupid_descends)
+      , leafnode = fromExpandedJSONLD(
+          {'http://stupid.com/color': [{'@value': 'black'}]}).first()
+  t.plan(2)
+  t.ok(node.descendantNodes().equals(expected), 'returns expected nodes')
+  t.ok(leafnode.descendantNodes().equals(
+    Immutable.List.of(Immutable.List.of(Immutable.List(), leafnode))),
+    'returns itself')
 })

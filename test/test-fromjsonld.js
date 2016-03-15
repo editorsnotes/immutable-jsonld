@@ -38,8 +38,25 @@ test('test fromExpandedJSONLD([])', t => {
   t.equal(nodes.size, 0, 'size is 0')
 })
 
+test('test fromExpandedJSONLD(Immutable.List)', t => {
+  const nodes = fromExpandedJSONLD(Immutable.List())
+  t.plan(3)
+  t.ok(nodes instanceof Immutable.List, 'is Immutable.List')
+  t.ok(nodes.isEmpty(), 'is empty')
+  t.equal(nodes.size, 0, 'size is 0')
+})
+
 test('test fromExpandedJSONLD({})', t => {
   const nodes = fromExpandedJSONLD({})
+  t.plan(4)
+  t.ok(nodes instanceof Immutable.List, 'is Immutable.List')
+  t.equal(nodes.size, 1, 'size is 1')
+  t.ok(nodes.first() instanceof JSONLDNode, 'contains a JSONLDNode')
+  t.ok(nodes.first().isEmpty(), 'contains an empty JSONLDNode')
+})
+
+test('test fromExpandedJSONLD(Immutable.Map)', t => {
+  const nodes = fromExpandedJSONLD(Immutable.Map())
   t.plan(4)
   t.ok(nodes instanceof Immutable.List, 'is Immutable.List')
   t.equal(nodes.size, 1, 'size is 1')
