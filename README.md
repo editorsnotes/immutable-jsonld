@@ -44,7 +44,7 @@ IJLD.fromJSONLD({'@context': {name: 'http://xmlns.com/foaf/0.1/name'},
 > Set { "http://xmlns.com/foaf/0.1/Person" }
 > Seq [ http://xmlns.com/foaf/0.1/name, List [ JSONLDValue { "@value": "Kanye" } ] ]
 
-`childNodes()` returns an [`Immutable.List`](http://facebook.github.io/immutable-js/docs/#/List) of predicate-`JSONLDNode` pairs (these pairs are also `Immutable.List`s), one for each node object value of the node's properties. (See the [source JSON-LD](https://gist.githubusercontent.com/rybesh/3cbacf6cbc539b7c22f7/raw/2c15ecbd3e878dd40523fa1ad8c70f004a1bb193/stupid.json) for these examples.)
+`childNodes()` returns an [`Immutable.List`](http://facebook.github.io/immutable-js/docs/#/List) of predicate-`JSONLDNode` pairs (these pairs are also `Immutable.List`s), one for each node object value of the node's properties. (See the [source JSON-LD](https://gist.github.com/rybesh/3cbacf6cbc539b7c22f7) for these examples.)
 
 ```javascript
 var IJLD = require('immutable-jsonld')
