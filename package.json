@@ -7,14 +7,10 @@
     "url": "https://github.com/rybesh/immutable-jsonld.git"
   },
   "main": "lib/ImmutableJSONLD.js",
-  "scripts": {
-    "lint": "eslint src",
-    "transpile": "babel src -d lib --source-maps inline",
-    "build": "npm -s run lint && npm -s run transpile",
-    "pretest": "npm -s run build && babel test -d lib/test",
-    "test": "tape lib/test/*.js | tap-spec",
-    "prepublish": "babel src -d lib"
-  },
+  "keywords": [
+    "immutable",
+    "json-ld"
+  ],
   "author": "Ryan Shaw <ryanshaw@unc.edu>",
   "license": "BSD-2-Clause",
   "devDependencies": {
@@ -28,5 +24,14 @@
   "dependencies": {
     "immutable": "^3.7.6",
     "jsonld": "^0.4.6"
+  },
+  "scripts": {
+    "lint": "eslint src",
+    "transpile": "babel src -d lib --source-maps inline",
+    "build": "npm -s run lint && npm -s run transpile",
+    "pretest": "npm -s run build && babel test -d lib/test",
+    "test": "tape lib/test/*.js | tap-spec",
+    "prepublish": "babel src -d lib",
+    "preversion": "npm test"
   }
 }
