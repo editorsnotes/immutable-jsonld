@@ -81,3 +81,5 @@ IJLD.fromJSONLD(url).then(function(nodes) {
 })
 ```
 > Set { JSONLDValue { "@value": "black" }, JSONLDValue { "@value": "unknown" } }
+
+See the [tests](test) for more examples.
