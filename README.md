@@ -23,7 +23,9 @@ console.log(value.type)
 console.log(value.language)
 ```
 > 頑張れ日本
+
 > http://www.w3.org/2001/XMLSchema#string
+
 > ja
 
 A `JSONLDNode` is just an [`Immutable.Map`](http://facebook.github.io/immutable-js/docs/#/Map) interface to the [expanded form](https://www.w3.org/TR/json-ld/#expanded-document-form) of a JSON-LD [node object](https://www.w3.org/TR/json-ld/#node-objects), with a few convenience methods and getters added:
@@ -41,7 +43,9 @@ IJLD.fromJSONLD({'@context': {name: 'http://xmlns.com/foaf/0.1/name'},
     })
 ```
 > http://viaf.org/viaf/61794068
+
 > Set { "http://xmlns.com/foaf/0.1/Person" }
+
 > Seq [ http://xmlns.com/foaf/0.1/name, List [ JSONLDValue { "@value": "Kanye" } ] ]
 
 `childNodes()` returns an [`Immutable.List`](http://facebook.github.io/immutable-js/docs/#/List) of predicate-`JSONLDNode` pairs (these pairs are also `Immutable.List`s), one for each node object value of the node's properties. (See the [source JSON-LD](https://gist.github.com/rybesh/3cbacf6cbc539b7c22f7) for these examples.)
