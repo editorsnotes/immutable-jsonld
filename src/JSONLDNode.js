@@ -31,7 +31,6 @@ export function JSONLDNode(value) {
 JSONLDNode.prototype = Object.create(Map.prototype)
 JSONLDNode.prototype.constructor = JSONLDNode
 JSONLDNode.prototype[IS_JSONLD_NODE_SENTINEL] = true
-JSONLDNode.prototype[DELETE] = JSONLDNode.prototype.remove
 
 JSONLDNode.prototype.toString = function () {
   return this.__toString('JSONLDNode {', '}')
@@ -91,6 +90,8 @@ JSONLDNode.prototype.set = function (k, v) {
 JSONLDNode.prototype.remove = function (k) {
   return updateJSONLDNode(this, k, NOT_SET)
 }
+
+JSONLDNode.prototype[DELETE] = JSONLDNode.prototype.remove
 
 JSONLDNode.prototype.wasAltered = function () {
   return this._map.wasAltered()

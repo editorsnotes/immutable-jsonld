@@ -216,3 +216,17 @@ test('test JSONLDNode.descendantNodes()', t => {
     Immutable.List.of(Immutable.List.of(Immutable.List(), leafnode))),
     'returns itself')
 })
+
+test('test JSONLDNode.delete()', t => {
+  const node = JSONLDNode({'@id': 'http://stupid.com/1'})
+      , expected = JSONLDNode()
+  t.plan(1)
+  t.ok(node.delete('@id').equals(expected), 'returns expected node')
+})
+
+test('test JSONLDNode.remove()', t => {
+  const node = JSONLDNode({'@id': 'http://stupid.com/1'})
+      , expected = JSONLDNode()
+  t.plan(1)
+  t.ok(node.remove('@id').equals(expected), 'returns expected node')
+})

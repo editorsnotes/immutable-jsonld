@@ -23,7 +23,7 @@ const ensureValueObject = value => {
       return {'@value': value}
     case 'object':
       if ('@value' in value) return value
-      if (value.has('@value')) return value
+      if (value.has && value.has('@value')) return value
     default:
       throw `No @value prop in ${value}`
   }
@@ -42,7 +42,6 @@ export function JSONLDValue(value) {
 JSONLDValue.prototype = Object.create(Map.prototype)
 JSONLDValue.prototype.constructor = JSONLDValue
 JSONLDValue.prototype[IS_JSONLD_VALUE_SENTINEL] = true
-JSONLDValue.prototype[DELETE] = JSONLDValue.prototype.remove
 
 JSONLDValue.prototype.toString = function () {
   return this.__toString('JSONLDValue {', '}')
@@ -71,6 +70,8 @@ JSONLDValue.prototype.set = function (k, v) {
 JSONLDValue.prototype.remove = function (k) {
   return updateJSONLDValue(this, k, NOT_SET)
 }
+
+JSONLDValue.prototype[DELETE] = JSONLDValue.prototype.remove
 
 JSONLDValue.prototype.wasAltered = function () {
   return this._map.wasAltered()
@@ -131,7 +132,11 @@ function updateJSONLDValue(value, k, v) {
     if (!has) {
       return value
     }
-    newMap = map.remove(k)
+    if (k === '@value') {
+      newMap = map.set(k, '')
+    } else {
+      newMap = map.remove(k)
+    }
   } else {
     newMap = map.set(k, v)
   }

@@ -100,3 +100,17 @@ test('test JSONLDValue.value', t => {
     t.ok(/^Cannot set property value/.test(e.message), 'with message')
   }
 })
+
+test('test JSONLDValue.delete()', t => {
+  const value = JSONLDValue({'@value': 'x'})
+      , expected = JSONLDValue({'@value': ''})
+  t.plan(1)
+  t.ok(value.delete('@value').equals(expected), 'returns expected value')
+})
+
+test('test JSONLDValue.remove()', t => {
+  const value = JSONLDValue({'@value': 'x'})
+      , expected = JSONLDValue({'@value': ''})
+  t.plan(1)
+  t.ok(value.remove('@value').equals(expected), 'returns expected value')
+})
