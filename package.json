@@ -23,7 +23,8 @@
   },
   "dependencies": {
     "immutable": "^3.7.6",
-    "jsonld": "^0.4.6"
+    "jsonld": "^0.4.6",
+    "rdf-ns": "0.0.2"
   },
   "scripts": {
     "lint": "eslint src",

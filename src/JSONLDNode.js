@@ -1,6 +1,7 @@
 'use strict'
 
 import {Map, Set, List, Iterable} from 'immutable'
+import ns from 'rdf-ns'
 
 const IS_JSONLD_NODE_SENTINEL = '@@__IMMUTABLE_JSONLD_NODE__@@'
     , KEYWORDS = Set.of(
@@ -58,6 +59,30 @@ JSONLDNode.prototype.childNodes = function () {
       let nodes = list.filter(child => isJSONLDNode(child))
       return childNodes.concat(nodes.map(node => List.of(predicate, node)))
     }, List())
+}
+
+const skos = ns('http://www.w3.org/2004/02/skos/core#')
+const rdfs = ns('http://www.w3.org/2000/01/rdf-schema#')
+
+JSONLDNode.prototype.preferredLabel = function (
+  language = '', labelPredicates = [skos('prefLabel'), rdfs('label')]) {
+  const predicates = List(labelPredicates)
+  const labelProperty = this.propertySeq()
+    .filter(([predicate, ]) => predicates.includes(predicate))
+    .filter(([ , list]) => language === ''
+      ? true
+      : list.some(label => label.language === language))
+    .sort(([predicateA, ], [predicateB, ]) => {
+      let indexA = predicates.indexOf(predicateA)
+        , indexB = predicates.indexOf(predicateB)
+      return indexA < indexB ? -1 : indexA > indexB ? 1 : 0
+    })
+    .first()
+  return labelProperty === undefined
+    ? undefined
+    : labelProperty[1].find(label => language === ''
+        ? label.language === undefined
+        : label.language === language)
 }
 
 JSONLDNode.prototype.push = function(predicate, object) {

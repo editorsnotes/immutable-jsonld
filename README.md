@@ -100,4 +100,31 @@ JSONLDNode().push('@type', 'http://xmlns.com/foaf/0.1/Agent')
 ```
 > JSONLDNode { "http://xmlns.com/foaf/0.1/Agent": List [ "http://xmlns.com/foaf/0.1/Agent" ] }
 
+`preferredLabel()` returns a usable label, if one exists.
+
+```javascript
+JSONLDNode()
+  .push('http://www.w3.org/2000/01/rdf-schema#label', JSONLDValue { "@value": "something" })
+  .preferredLabel()
+```
+> something
+
+```javascript
+JSONLDNode()
+  .push('http://www.w3.org/2000/01/rdf-schema#label', JSONLDValue { "@value": "something" })
+  .push('http://www.w3.org/2004/02/skos/core#prefLabel', JSONLDValue { "@value": "something else" })
+  .preferredLabel()
+```
+> something else
+
+```javascript
+JSONLDNode()
+  .push('http://www.w3.org/2000/01/rdf-schema#label',
+        JSONLDValue { "@value": "English", "@language": "en" })
+  .push('http://www.w3.org/2000/01/rdf-schema#label',
+        JSONLDValue { "@value": "日本語", "@language": "ja" })
+  .preferredLabel('ja')
+```
+> 日本語
+
 See the [tests](test) for more examples.
