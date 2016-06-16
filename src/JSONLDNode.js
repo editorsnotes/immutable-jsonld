@@ -60,6 +60,10 @@ JSONLDNode.prototype.childNodes = function () {
     }, List())
 }
 
+JSONLDNode.prototype.push = function(predicate, object) {
+  return this.update(predicate, List(), list => list.push(object))
+}
+
 function descendantNodesOf(node, propertyPath=List()) {
   return List.of(List.of(propertyPath, node)).concat(
     node.childNodes()

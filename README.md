@@ -86,4 +86,18 @@ IJLD.fromJSONLD(url).then(function(nodes) {
 ```
 > Set { JSONLDValue { "@value": "black" }, JSONLDValue { "@value": "unknown" } }
 
+`push()` takes a predicate URI or JSON-LD keyword and appends the supplied object to the appropriate property.
+
+```javascript
+JSONLDNode().push('http://xmlns.com/foaf/0.1/name', JSONLDValue { "@value": "Coltrane" })
+
+```
+> JSONLDNode { "http://xmlns.com/foaf/0.1/name": List [ JSONLDValue { "@value": "Coltrane" } ] }
+
+```javascript
+JSONLDNode().push('@type', 'http://xmlns.com/foaf/0.1/Agent')
+
+```
+> JSONLDNode { "http://xmlns.com/foaf/0.1/Agent": List [ "http://xmlns.com/foaf/0.1/Agent" ] }
+
 See the [tests](test) for more examples.

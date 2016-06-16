@@ -230,3 +230,27 @@ test('test JSONLDNode.remove()', t => {
   t.plan(1)
   t.ok(node.remove('@id').equals(expected), 'returns expected node')
 })
+
+test('test JSONLDNode.push()', t => {
+  const node = JSONLDNode()
+      , predicate = 'http://stupid.com/prop'
+      , value1 = JSONLDValue({'@value': 'val1'})
+      , value2 = JSONLDValue({'@value': 'val2'})
+      , expected1 = JSONLDNode({[predicate]: Immutable.List.of(value1)})
+      , expected2 = JSONLDNode({[predicate]: Immutable.List.of(value1, value2)})
+  console.log(expected1)
+  t.plan(2)
+  t.ok(node.push(predicate, value1).equals(expected1))
+  t.ok(node.push(predicate, value1).push(predicate, value2).equals(expected2))
+})
+
+test('test JSONLDNode.push(@type)', t => {
+  const node = JSONLDNode()
+      , class1 = 'http://stupid.com/Fish'
+      , class2 = 'http://stupid.com/Bicycle'
+      , expected1 = JSONLDNode({'@type': Immutable.List.of(class1)})
+      , expected2 = JSONLDNode({'@type': Immutable.List.of(class1, class2)})
+  t.plan(2)
+  t.ok(node.push('@type', class1).equals(expected1))
+  t.ok(node.push('@type', class1).push('@type', class2).equals(expected2))
+})
