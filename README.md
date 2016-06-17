@@ -14,7 +14,7 @@ A `JSONLDValue` is just an [`Immutable.Map`](http://facebook.github.io/immutable
 var IJLD = require('immutable-jsonld')
 var value = IJLD.JSONLDValue(
   { '@value': '頑張れ日本'
-  , '@type': 'http://www.w3.org/2001/XMLSchema#string'
+  , '@type': 'http://www.w3.org/1999/02/22-rdf-syntax-ns#langString'
   , '@language': 'ja'
   }
 )
@@ -24,7 +24,7 @@ console.log(value.language)
 ```
 > 頑張れ日本
 
-> http://www.w3.org/2001/XMLSchema#string
+> http://www.w3.org/1999/02/22-rdf-syntax-ns#langString
 
 > ja
 
