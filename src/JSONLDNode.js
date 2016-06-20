@@ -65,24 +65,42 @@ const skos = ns('http://www.w3.org/2004/02/skos/core#')
 const rdfs = ns('http://www.w3.org/2000/01/rdf-schema#')
 
 JSONLDNode.prototype.preferredLabel = function (
-  language = '', labelPredicates = [skos('prefLabel'), rdfs('label')]) {
+  language, labelPredicates = [skos('prefLabel'), rdfs('label')]) {
   const predicates = List(labelPredicates)
-  const labelProperty = this.propertySeq()
+  const result = this.propertySeq()
+    // include only properties with preferred label predicates
     .filter(([predicate, ]) => predicates.includes(predicate))
-    .filter(([ , list]) => language === ''
-      ? true
-      : list.some(label => label.language === language))
+    // include only properties with preferred language
+    .filter(([ , list]) => language
+      ? list.some(label => label.language === language)
+      : true)
+    // iterate over [predicate, label] pairs
+    .flatMap(([predicate, list]) => list.map(label => [predicate, label]))
+    // sort by preference order over label predicates
     .sort(([predicateA, ], [predicateB, ]) => {
       let indexA = predicates.indexOf(predicateA)
         , indexB = predicates.indexOf(predicateB)
       return indexA < indexB ? -1 : indexA > indexB ? 1 : 0
     })
+    // sort by preference order
+    .sort(([predicateA, labelA], [predicateB, labelB]) => {
+      let indexA = predicates.indexOf(predicateA)
+        , indexB = predicates.indexOf(predicateB)
+      return indexA < indexB
+        ? -1
+        : indexA > indexB
+            ? 1
+            : labelA.language === labelB.language
+                ? 0
+                : labelA.language === language
+                    ? -1
+                    : labelB.language === language
+                        ? 1
+                        : 0
+    })
+    // return the first label
     .first()
-  return labelProperty === undefined
-    ? undefined
-    : labelProperty[1].find(label => language === ''
-        ? label.language === undefined
-        : label.language === language)
+  return result ? result[1] : undefined
 }
 
 JSONLDNode.prototype.push = function(predicate, object) {
