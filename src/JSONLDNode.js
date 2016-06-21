@@ -4,8 +4,6 @@ import {Map, Set, List, Iterable} from 'immutable'
 import ns from 'rdf-ns'
 
 const IS_JSONLD_NODE_SENTINEL = '@@__IMMUTABLE_JSONLD_NODE__@@'
-    , KEYWORDS = Set.of(
-      '@context', '@id', '@graph', '@type', '@reverse', '@index')
     , DELETE = 'delete'
     , NOT_SET = {}
 
@@ -50,7 +48,7 @@ JSONLDNode.prototype.getAt = function (propertyPath, notSetValue) {
 }
 
 JSONLDNode.prototype.propertySeq = function () {
-  return this._map.entrySeq().filterNot(([k, ]) => KEYWORDS.includes(k))
+  return this._map.entrySeq().filterNot(([k, ]) => k.startsWith('@'))
 }
 
 JSONLDNode.prototype.childNodes = function () {
@@ -64,10 +62,8 @@ JSONLDNode.prototype.childNodes = function () {
 const skos = ns('http://www.w3.org/2004/02/skos/core#')
 const rdfs = ns('http://www.w3.org/2000/01/rdf-schema#')
 
-JSONLDNode.prototype.preferredLabel = function (
-  language, labelPredicates = [skos('prefLabel'), rdfs('label')]) {
-  const predicates = List(labelPredicates)
-  const result = this.propertySeq()
+const preferredLabel = (properties, language, predicates) => {
+  const result = properties
     // include only properties with preferred label predicates
     .filter(([predicate, ]) => predicates.includes(predicate))
     // include only properties with preferred language
@@ -101,6 +97,18 @@ JSONLDNode.prototype.preferredLabel = function (
     // return the first label
     .first()
   return result ? result[1] : undefined
+}
+
+JSONLDNode.prototype.preferredLabel = function(
+  language,
+  predicates = List.of(skos('prefLabel'), rdfs('label'))) {
+
+  const key = List.of(language, predicates)
+  if (! this._preferredLabels.has(key)) {
+    this._preferredLabels = this._preferredLabels.set(
+      key, preferredLabel(this.propertySeq(), language, predicates))
+  }
+  return this._preferredLabels.get(key)
 }
 
 JSONLDNode.prototype.push = function(predicate, object) {
@@ -174,6 +182,7 @@ function makeJSONLDNode(map, ownerID, hash) {
   var node = Object.create(JSONLDNode.prototype)
   node.size = map ? map.size : 0
   node._map = map
+  node._preferredLabels = Map()
   node.__ownerID = ownerID
   node.__hash = hash
   Object.defineProperties(node,
