@@ -114,3 +114,20 @@ test('test JSONLDValue.remove()', t => {
   t.plan(1)
   t.ok(value.remove('@value').equals(expected), 'returns expected value')
 })
+
+test('test JSONLDValue.set(foo, bar)', t => {
+  let value = JSONLDValue()
+  t.plan(1)
+  t.throws(() => value.set('foo', 'bar'),
+    /invalid value object keypath: \[ foo \]/)
+})
+
+test('test JSONLDValue.set(foo, bar) in production', t => {
+  let node_env = process.env['NODE_ENV']
+  process.env['NODE_ENV'] = 'production'
+  let value = JSONLDValue()
+  t.plan(2)
+  t.doesNotThrow(() => value.set('foo', 'bar'))
+  t.equals(value.set('foo', 'bar').get('foo'), 'bar')
+  process.env['NODE_ENV'] = node_env
+})

@@ -179,9 +179,7 @@ test('test JSONLDNode.id', t => {
 
 test('test JSONLDNode.propertySeq()', t => {
   const allkeywords = JSONLDNode(
-    { '@context': {}
-    , '@id': null
-    , '@graph': []
+    { '@id': null
     , '@type': []
     , '@reverse': null
     , '@index': null
@@ -344,3 +342,40 @@ test('test JSONLDNode.preferredLabel(labelPredicates)', t => {
     .equals(label1))
 })
 
+test('test JSONLDNode.set(@value, blah)', t => {
+  let node = JSONLDNode()
+  t.plan(1)
+  t.throws(() => node.set('@value', 'blah'),
+    /invalid node object keypath: \[ @value \]/)
+})
+
+test('test JSONLDNode.setIn([@type, 0])', t => {
+  let node = JSONLDNode()
+  t.plan(2)
+  t.throws(() => node.setIn(['@type', 0], 'blah'),
+    /no Immutable\.List exists at keypath: \[ @type \]/)
+  node = node.set('@type', List())
+  t.doesNotThrow(() => node.setIn(['@type', 0], 'blah'))
+})
+
+test('test JSONLDNode.setIn(invalidKeypath)', t => {
+  t.plan(9)
+  const node = JSONLDNode()
+  t.throws(() => node.setIn([0], 'x'))
+  t.throws(() => node.setIn([true], 'x'))
+  t.throws(() => node.setIn([{}], 'x'))
+  t.throws(() => node.setIn([[]], 'x'))
+  t.throws(() => node.setIn(['a', 'b'], 'x'))
+  t.throws(() => node.setIn(['a', 0, 0], 'x'))
+  t.throws(() => node.setIn([0, 'a', 0], 'x'))
+  t.throws(() => node.setIn(['@id', 0], 'x'))
+  t.throws(() => node.setIn(['@type', 0, 'foo'], 'x'))
+})
+
+test('invalid keyPath does not throw in production', t => {
+  let node_env = process.env['NODE_ENV']
+  process.env['NODE_ENV'] = 'production'
+  t.plan(1)
+  t.doesNotThrow(() => JSONLDNode().setIn(List(), 'blah'))
+  process.env['NODE_ENV'] = node_env
+})

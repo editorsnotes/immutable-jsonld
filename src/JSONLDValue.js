@@ -1,6 +1,7 @@
 'use strict'
 
-import {Map, Iterable} from 'immutable'
+import {Map, List, Iterable} from 'immutable'
+import {validateKeypath} from './validateKeypath'
 
 const IS_JSONLD_VALUE_SENTINEL = '@@__IMMUTABLE_JSONLD_VALUE__@@'
     , DELETE = 'delete'
@@ -64,7 +65,17 @@ JSONLDValue.prototype.clear = function () {
 }
 
 JSONLDValue.prototype.set = function (k, v) {
+  if (process.env['NODE_ENV'] !== 'production') {
+    validateKeypath(this, List.of(k))
+  }
   return updateJSONLDValue(this, k, v)
+}
+
+JSONLDValue.prototype.updateIn = function (keyPath, notSetValue, updater) {
+  if (process.env['NODE_ENV'] !== 'production') {
+    validateKeypath(this, keyPath)
+  }
+  return Map.prototype.updateIn.call(this, keyPath, notSetValue, updater)
 }
 
 JSONLDValue.prototype.remove = function (k) {

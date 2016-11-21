@@ -2,6 +2,7 @@
 
 import {Map, Set, List, Iterable} from 'immutable'
 import ns from 'rdf-ns'
+import {validateKeypath} from './validateKeypath'
 
 const IS_JSONLD_NODE_SENTINEL = '@@__IMMUTABLE_JSONLD_NODE__@@'
     , DELETE = 'delete'
@@ -139,7 +140,17 @@ JSONLDNode.prototype.clear = function () {
 }
 
 JSONLDNode.prototype.set = function (k, v) {
+  if (process.env['NODE_ENV'] !== 'production') {
+    validateKeypath(this, List.of(k))
+  }
   return updateJSONLDNode(this, k, v)
+}
+
+JSONLDNode.prototype.updateIn = function (keyPath, notSetValue, updater) {
+  if (process.env['NODE_ENV'] !== 'production') {
+    validateKeypath(this, keyPath)
+  }
+  return Map.prototype.updateIn.call(this, keyPath, notSetValue, updater)
 }
 
 JSONLDNode.prototype.remove = function (k) {
