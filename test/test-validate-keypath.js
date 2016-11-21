@@ -2,7 +2,7 @@
 
 import test from 'tape'
 import {List} from 'immutable'
-import {JSONLDValue, JSONLDNode} from '../ImmutableJSONLD'
+import {JSONLDValue, JSONLDNode, fromExpandedJSONLD} from '../ImmutableJSONLD'
 import {validateKeypath, findKeypathProblem} from '../validateKeypath'
 
 test('test find problems with JSONLDValue paths', t => {
@@ -149,4 +149,28 @@ test('key path entries can only be numbers and strings', t => {
 test('validateKeypath throws if findKeypathProblem returns not null', t => {
   t.plan(1)
   t.throws(() => validateKeypath(JSONLDValue(), List.of()), /empty keypath/)
+})
+
+import reverse_expanded from '../../test/data/reverse-expanded.json'
+test('valid @reverse keypaths work', t => {
+  const node = fromExpandedJSONLD(reverse_expanded)
+  t.plan(1)
+  t.equal(findKeypathProblem(node,
+    ['@reverse'
+    , 'http://example.com/vocab#parent'
+    , 1
+    , '@id'
+    ]), null)
+})
+
+import list_expanded from '../../test/data/list-expanded.json'
+test('valid @list keypaths work', t => {
+  const node = fromExpandedJSONLD(list_expanded)
+  t.plan(1)
+  t.equal(findKeypathProblem(node,
+    ['http://xmlns.com/foaf/0.1/nick'
+    , '@list'
+    , 1
+    , 'value'
+    ]), null)
 })
