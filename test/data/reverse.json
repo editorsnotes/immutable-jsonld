@@ -1,0 +1,16 @@
+{
+  "@id": "http://example.com/simpsons#homer",
+  "http://example.com/vocab#name": "Homer",
+  "@reverse": {
+    "http://example.com/vocab#parent": [
+      {
+        "@id": "http://example.com/simpsons#bart",
+        "http://example.com/vocab#name": "Bart"
+      },
+      {
+        "@id": "http://example.com/simpsons#lisa",
+        "http://example.com/vocab#name": "Lisa"
+      }
+    ]
+  }
+}

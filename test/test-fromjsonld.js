@@ -2,7 +2,11 @@
 
 import test from 'tape'
 import Immutable from 'immutable'
-import {JSONLDNode, fromJSONLD, fromExpandedJSONLD} from '../ImmutableJSONLD'
+import { JSONLDNode
+       , JSONLDValue
+       , fromJSONLD
+       , fromExpandedJSONLD
+       } from '../ImmutableJSONLD'
 
 import person from '../../test/data/person-expanded.json'
 import event from '../../test/data/event-expanded.json'
@@ -13,6 +17,12 @@ import library from '../../test/data/library-expanded.json'
 import activity from '../../test/data/activity-expanded.json'
 import stupid from '../../test/data/stupid.json'
 import stupid_expanded from '../../test/data/stupid-expanded.json'
+import reverse from '../../test/data/reverse.json'
+import reverse_expanded from '../../test/data/reverse-expanded.json'
+import list from '../../test/data/list.json'
+import list_expanded from '../../test/data/list-expanded.json'
+import set from '../../test/data/set.json'
+import set_expanded from '../../test/data/set-expanded.json'
 
 test('test fromExpandedJSONLD()', t => {
   const nodes = fromExpandedJSONLD()
@@ -186,6 +196,65 @@ test('test fromJSONLD(url)', t => {
         let node = nodes.first()
         t.ok(node instanceof JSONLDNode, 'contains a JSONLDNode')
         t.equal(node.size, 2, 'with 2 entries')
+        t.end()
+      })
+    .catch(err => t.end(err))
+})
+
+test('test @reverse handling', t => {
+  fromJSONLD(reverse)
+    .then(
+      nodes => {
+        t.ok(nodes instanceof Immutable.List, 'is Immutable.List')
+        t.equal(nodes.size, 1, 'size is 1')
+        t.deepEqual(nodes.toJS(), reverse_expanded, 'round-trips OK')
+        let node = nodes.first()
+        t.ok(node instanceof JSONLDNode, 'contains a JSONLDNode')
+        t.equal(node.size, 3, 'with 3 entries')
+        let atreverse = node.get('@reverse')
+        t.ok(atreverse instanceof JSONLDNode, '@reverse is a JSONLDNode')
+        t.equal(atreverse.size, 1, 'with 1 entry')
+        t.end()
+      })
+    .catch(err => t.end(err))
+})
+
+test('test @list handling', t => {
+  fromJSONLD(list)
+    .then(
+      nodes => {
+        t.ok(nodes instanceof Immutable.List, 'is Immutable.List')
+        t.equal(nodes.size, 1, 'size is 1')
+        t.deepEqual(nodes.toJS(), list_expanded, 'round-trips OK')
+        let node = nodes.first()
+        t.ok(node instanceof JSONLDNode, 'contains a JSONLDNode')
+        t.equal(node.size, 2, 'with 2 entries')
+        let values = node.get('http://xmlns.com/foaf/0.1/nick')
+        t.ok(values instanceof Immutable.List, 'is Immutable.List')
+        let map = values.first()
+        t.ok(map instanceof Immutable.Map, 'is Immutable.Map')
+        t.false(JSONLDNode.isJSONLDNode(map), 'is not a JSONLDNode')
+        let list = map.get('@list')
+        t.ok(list instanceof Immutable.List, 'is Immutable.List')
+        t.end()
+      })
+    .catch(err => t.end(err))
+})
+
+test('test @set handling', t => {
+  fromJSONLD(set)
+    .then(
+      nodes => {
+        t.ok(nodes instanceof Immutable.List, 'is Immutable.List')
+        t.equal(nodes.size, 1, 'size is 1')
+        t.deepEqual(nodes.toJS(), set_expanded, 'round-trips OK')
+        let node = nodes.first()
+        t.ok(node instanceof JSONLDNode, 'contains a JSONLDNode')
+        t.equal(node.size, 2, 'with 2 entries')
+        let values = node.get('http://xmlns.com/foaf/0.1/nick')
+        t.ok(values instanceof Immutable.List, 'is Immutable.List')
+        let value = values.first()
+        t.ok(value instanceof JSONLDValue, 'is JSONLDValue')
         t.end()
       })
     .catch(err => t.end(err))

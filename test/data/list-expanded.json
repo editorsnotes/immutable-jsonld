@@ -1,0 +1,20 @@
+[
+  {
+    "@id": "http://example.org/people#joebob",
+    "http://xmlns.com/foaf/0.1/nick": [
+      {
+        "@list": [
+          {
+            "@value": "joe"
+          },
+          {
+            "@value": "bob"
+          },
+          {
+            "@value": "jaybee"
+          }
+        ]
+      }
+    ]
+  }
+]

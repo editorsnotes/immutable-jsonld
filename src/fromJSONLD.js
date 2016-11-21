@@ -7,11 +7,13 @@ import {JSONLDValue} from './JSONLDValue'
 
 const ensureJS = x => Immutable.Iterable.isIterable(x) ? x.toJS() : x
 
-export function JSONLDReviver(k, v) {
-  let isIndexed = Immutable.Iterable.isIndexed(v)
-  return isIndexed ? v.toList() :
-    v.has('@value') ? JSONLDValue(v) : JSONLDNode(v)
-}
+export const JSONLDReviver = (k, v) => Immutable.Iterable.isIndexed(v)
+  ? v.toList()
+  : v.has('@value')
+      ? JSONLDValue(v)
+      : v.has('@list')
+          ? Immutable.Map(v)
+          : JSONLDNode(v)
 
 export function fromExpandedJSONLD(jsonld) {
   if (jsonld === null || jsonld === undefined) {
