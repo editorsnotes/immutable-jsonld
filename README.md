@@ -1,3 +1,5 @@
+## `fromJSONLD`
+
 Use `fromJSONLD` to asynchronously load JSON-LD from a URL or JavaScript objects or arrays. Returns an [`Immutable.List`](http://facebook.github.io/immutable-js/docs/#/List) of `JSONLDNodes`.
 
 ```javascript
@@ -7,6 +9,8 @@ IJLD.fromJSONLD({'@context': {name: 'http://xmlns.com/foaf/0.1/name'},
     .then(function(nodes) { console.log(nodes) })
 ```
 > List [ JSONLDNode { "@id": "http://viaf.org/viaf/61794068", "http://xmlns.com/foaf/0.1/name": List [ JSONLDValue { "@value": "Kanye" } ] } ]
+
+## `JSONLDValue`
 
 A `JSONLDValue` is just an [`Immutable.Map`](http://facebook.github.io/immutable-js/docs/#/Map) interface to the [expanded form](https://www.w3.org/TR/json-ld/#expanded-document-form) of a JSON-LD [value object](https://www.w3.org/TR/json-ld/#value-objects), with a few convenience methods and getters added:
 
@@ -27,6 +31,8 @@ console.log(value.language)
 > http://www.w3.org/1999/02/22-rdf-syntax-ns#langString
 
 > ja
+
+## `JSONLDNode`
 
 A `JSONLDNode` is just an [`Immutable.Map`](http://facebook.github.io/immutable-js/docs/#/Map) interface to the [expanded form](https://www.w3.org/TR/json-ld/#expanded-document-form) of a JSON-LD [node object](https://www.w3.org/TR/json-ld/#node-objects), with a few convenience methods and getters added:
 
@@ -128,3 +134,11 @@ JSONLDNode()
 > 日本語
 
 See the [tests](test) for more examples.
+
+## Key path validation
+
+Using `fromJSONLD()` will always return a list of `JSONLDNode`s that, when serialized back to JSON, will result in valid JSON-LD. However, it is possible to programmatically create a `JSONLDNode` that, when serialized back to JSON, is *not* valid JSON-LD. To help you avoid doing this, the `JSONLDNode` methods for making persistent changes will do some validation of the key path you provide, and throw an exception if your change would result in an invalid serialization. If the `NODE_ENV` environment variable is set to `production`, this validation will not be performed.
+
+## `setIn()` and `updateIn()` key path handling
+
+With the implementations of `setIn()` and `updateIn()` in `Immutable.Map`, a new Immutable.Map is created at each key that does not exist. The implementations of `setIn()` and `updateIn()` in `JSONLDNode` differ such that if any keys in the key path (prior to the last) do not exist, an exception will be thrown. This is to help prevent the creation of structures that would result in invalid expanded JSON-LD. If the `NODE_ENV` environment variable is set to `production`, these checks will not be performed.
