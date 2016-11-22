@@ -9,7 +9,7 @@ test('test find problems with JSONLDValue paths', t => {
   t.plan(9)
 
   const value = JSONLDValue()
-  t.equals(findKeypathProblem(value, List.of()), 'empty keypath')
+  t.equals(findKeypathProblem(value, List.of()), null)
   t.equals(findKeypathProblem(value, List.of('@value')), null)
   t.equals(findKeypathProblem(value, List.of('@type')), null)
   t.equals(findKeypathProblem(value, List.of('@language')), null)
@@ -33,7 +33,7 @@ test('test find problems with JSONLDNode paths', t => {
 
   const node = JSONLDNode()
 
-  t.equals(findKeypathProblem(node, List.of()), 'empty keypath')
+  t.equals(findKeypathProblem(node, List.of()), null)
 
   t.equals(findKeypathProblem(node, List.of('@value')),
     'invalid node object keypath: [ @value ]')
@@ -113,10 +113,10 @@ test('test find problems with JSONLDNode paths', t => {
 test('validateKeypath works with arrays too', t => {
   t.plan(4)
   const value = JSONLDValue()
-  t.equals(findKeypathProblem(value, []), 'empty keypath')
+  t.equals(findKeypathProblem(value, []), null)
   t.equals(findKeypathProblem(value, ['@value']), null)
   const node = JSONLDNode()
-  t.equals(findKeypathProblem(node, []), 'empty keypath')
+  t.equals(findKeypathProblem(node, []), null)
   t.equals(findKeypathProblem(node, ['@id']), null)
 })
 
@@ -148,7 +148,8 @@ test('key path entries can only be numbers and strings', t => {
 
 test('validateKeypath throws if findKeypathProblem returns not null', t => {
   t.plan(1)
-  t.throws(() => validateKeypath(JSONLDValue(), List.of()), /empty keypath/)
+  t.throws(() => validateKeypath(JSONLDValue(), List.of('x')),
+    /invalid value object keypath: \[ x \]/)
 })
 
 import reverse_expanded from '../../test/data/reverse-expanded.json'

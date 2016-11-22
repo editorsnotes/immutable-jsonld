@@ -105,7 +105,7 @@ const problemReducer = ({node, keyPath, problem}, key, keyPathIndex) => {
 
 export const findJSONLDNodeKeypathProblem = (node, keyPath) => {
   if (keyPath.isEmpty()) {
-    return 'empty keypath'
+    return null
   }
   if (typeof(keyPath.first()) === 'number') {
     return invalidNode(keyPath)
@@ -116,7 +116,7 @@ export const findJSONLDNodeKeypathProblem = (node, keyPath) => {
 
 export const findJSONLDValueKeypathProblem = (value, keyPath) => {
   if (keyPath.isEmpty()) {
-    return 'empty keypath'
+    return null
   }
   if (keyPath.size > 1) {
     return invalidValue(keyPath)
