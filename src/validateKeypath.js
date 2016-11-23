@@ -17,9 +17,39 @@ const invalidExpandedNode = keyPath => (
   `invalid expanded node object keypath: ${show(keyPath)}`
 )
 
+export const findJSONLDValueKeypathProblem = (value, keyPath) => {
+  if (keyPath.isEmpty()) {
+    return null
+  }
+  if (keyPath.size > 1) {
+    return invalidValue(keyPath)
+  }
+  const key = keyPath.first()
+  if (! valueKeys.includes(key)) {
+    return invalidValue(keyPath)
+  }
+  if (value.has('@type') && key === '@language') {
+    return 'typed values cannot have an @language key'
+  }
+  if (value.has('@language') && key === '@type') {
+    return 'language tagged strings cannot have an @type key'
+  }
+  return null
+}
+
 const problemReducer = ({node, keyPath, problem}, key, keyPathIndex) => {
   if (problem !== null) {
     return {node, keyPath, problem}
+  }
+  const value = node.getIn(keyPath.slice(0, keyPathIndex))
+  if (JSONLDValue.isJSONLDValue(value)) {
+    return (
+      { node
+      , keyPath
+      , problem: findJSONLDValueKeypathProblem(
+          value, keyPath.slice(keyPathIndex))
+      }
+    )
   }
   if (! (typeof(key) === 'string' || typeof(key) === 'number')) {
     return {node, keyPath, problem: invalidNode(keyPath)}
@@ -91,11 +121,13 @@ const problemReducer = ({node, keyPath, problem}, key, keyPathIndex) => {
       && keyPathIndex !== keyPath.size - 1
      ) {
     const path = keyPath.slice(0, keyPathIndex + 1)
-    if (! JSONLDNode.isJSONLDNode(node.getIn(path))) {
+    const o = node.getIn(path)
+    if (! (JSONLDNode.isJSONLDNode(o) || JSONLDValue.isJSONLDValue(o))) {
       return (
         { node
         , keyPath
-        , problem: `no JSONLDNode exists at keypath: ${show(path)}`
+        , problem:
+          `no JSONLDNode or JSONLDValue exists at keypath: ${show(path)}`
         }
       )
     }
@@ -112,26 +144,6 @@ export const findJSONLDNodeKeypathProblem = (node, keyPath) => {
   }
   return keyPath.reduceRight(
     problemReducer, {node, keyPath, problem: null}).problem
-}
-
-export const findJSONLDValueKeypathProblem = (value, keyPath) => {
-  if (keyPath.isEmpty()) {
-    return null
-  }
-  if (keyPath.size > 1) {
-    return invalidValue(keyPath)
-  }
-  const key = keyPath.first()
-  if (! valueKeys.includes(key)) {
-    return invalidValue(keyPath)
-  }
-  if (value.has('@type') && key === '@language') {
-    return 'typed values cannot have an @language key'
-  }
-  if (value.has('@language') && key === '@type') {
-    return 'language tagged strings cannot have an @type key'
-  }
-  return null
 }
 
 export const findKeypathProblem = (map, keypath) => (

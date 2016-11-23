@@ -29,7 +29,7 @@ test('test find problems with JSONLDValue paths', t => {
 })
 
 test('test find problems with JSONLDNode paths', t => {
-  t.plan(29)
+  t.plan(30)
 
   const node = JSONLDNode()
 
@@ -80,7 +80,7 @@ test('test find problems with JSONLDNode paths', t => {
   t.equals(findKeypathProblem(node, List.of('anystring', 3, 3)),
     'invalid node object keypath: [ anystring, 3, 3 ]')
   t.equals(findKeypathProblem(node, List.of('anystring', 3, 'anystring')),
-    'no JSONLDNode exists at keypath: [ anystring, 3 ]')
+    'no JSONLDNode or JSONLDValue exists at keypath: [ anystring, 3 ]')
 
   const node2 = JSONLDNode().push('blah', JSONLDNode())
   t.equals(
@@ -89,7 +89,7 @@ test('test find problems with JSONLDNode paths', t => {
   )
   t.equals(
     findKeypathProblem(node2, List.of('blah', 3, 'anystring', 2, 'anystring')),
-    'no JSONLDNode exists at keypath: [ blah, 3, anystring, 2 ]')
+    'no JSONLDNode or JSONLDValue exists at keypath: [ blah, 3, anystring, 2 ]')
 
   const node3 = JSONLDNode().push(
     'foo', JSONLDNode().push('bar', JSONLDValue()))
@@ -101,13 +101,16 @@ test('test find problems with JSONLDNode paths', t => {
   t.equals(
     findKeypathProblem(node3,
       List.of('foo', 2, 'bar', 6, 'anystring', 0, 'anystring')),
-    'no JSONLDNode exists at keypath: [ foo, 2, bar, 6, anystring, 0 ]'
+    'no JSONLDNode or JSONLDValue exists at keypath: [ foo, 2, bar, 6, anystring, 0 ]'
   )
 
   const node4 = JSONLDNode().push('@type', 'http://example.org/something')
   t.equals(findKeypathProblem(node4, List.of('@type', 3)), null)
   t.equals(findKeypathProblem(node4, List.of('@type', 0, 'anything')),
     'invalid node object keypath: [ @type, 0, anything ]')
+
+  const node5 = JSONLDNode().push('name', JSONLDValue())
+  t.equals(findKeypathProblem(node5, List.of('name', 0, '@value')), null)
 })
 
 test('validateKeypath works with arrays too', t => {
